@@ -13,7 +13,8 @@
                         <ph-nav-group>
                             <h5 class="nav-group-title">Favorites</h5>
                             <Favorites 
-                                :model='model' 
+                                :model='model'
+                                :key="model.name"
                                 :selected='selectedFavorite'
                                 @selectedFavoriteEvent = 'onSelectedFavorite'
                                 v-for='model in favorites'>
@@ -22,7 +23,8 @@
                         <ph-nav-group>
                             <h5 class="nav-group-title">Folders</h5>
                             <Folders 
-                                :model='model' 
+                                :model='model'
+                                :key="model.name"
                                 :selected='selectedFolder'
                                 @selectedFolderEvent = 'onSelectedFolder'
                                 v-for='model in folders'>
@@ -31,6 +33,7 @@
                         <ph-nav-group>
                             <h5 class="nav-group-title">Tags</h5>
                             <Tags :model='model'
+                                  :key="model.name"
                                   :selected='selectedTag'
                                   @selectedTagEvent='onSelectedTag'
                                   v-for='model in tags'>
@@ -44,117 +47,12 @@
                         <span class="icon icon-switch pull-right"></span>
                     </div>
                 </ph-pane>
-                <ph-pane size="sm" style="resize: horizontal">
-                    <div style="height: 39.2px;width: 100%;border-bottom: 1px solid gray">
-                        <input class="form-control" style="width: calc(100% - 30px);height: 100%;" type="text" placeholder="Search for someone">
-                        <ph-icon icon="plus" style="font-size: 18px;height: 100%;margin: 0 5px;" onclick="alert('1')"></ph-icon>
-                    </div>
-                    <ph-list-group style="overflow-y: auto;height: calc(100% - 39.2px)">
-                        <ph-list-group-item>
-                            <div class="media-body" style="opacity:0.5">
-                                <h5><strong>HttpClient Warpper</strong></h5>
-                                <div>
-                                    <span>Java</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="border-left: 2px solid rgba(0, 0, 0, 0.5);background-color: #f5f5f4">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="background-color: #f5f5f4">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="background-color: #f5f5f4">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="4">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                        <ph-list-group-item style="">
-                            <div class="media-body">
-                                <h5><strong>Chrome 推送消息</strong></h5>
-                                <div>
-                                    <span>Javascript</span>
-                                    <span class="pull-right">2017-11-02</span>
-                                </div>
-                            </div>
-                        </ph-list-group-item>
-                    </ph-list-group>
-
+                <ph-pane size="sm" style="resize: horizontal;">
+                    <snippet-list :filter="{type:'F',keyword:'X'}"></snippet-list>
                 </ph-pane>
                 <ph-pane id="codePane" style="overflow:hidden">
                     <div style="border-bottom: 1px solid #f0f0f0">
-                        <ph-toolbar-actions style="border-bottom: 1px solid gainsboro;">
+                        <ph-toolbar-actions style="border-bottom: 1px solid #eaeaea;">
                             <input class="form-control" style="width:calc(100% - 100px);" type="text" placeholder="title">
 
                             <div style="display: flex;width: 100px;padding: 5px 10px;float: right">
@@ -208,9 +106,11 @@
   import Folders from './IndexPage/Folders.vue'
   import Tags from './IndexPage/Tags.vue'
   import Favorites from './IndexPage/Favorites.vue'
+  import SnippetList from './IndexPage/SnippetList'
 
-  export default {
+export default {
     components: {
+      SnippetList,
       MonacoEditor,
       Folders,
       Tags,

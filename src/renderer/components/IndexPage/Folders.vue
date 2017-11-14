@@ -15,6 +15,7 @@
         <Folders
             :model='sitem'
             :selected='selected'
+            :key ='sitem.name'
             v-show="model.isExpand"
             v-for='sitem in model.items'
             @selectedFolderEvent = 'onSelectedFolder'>
