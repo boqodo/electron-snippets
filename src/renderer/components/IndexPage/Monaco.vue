@@ -39,7 +39,7 @@
       style () {
         return {
           width: 'calc(100% - 0.5px)',
-          height: 'calc(100% - 148.1px)'
+          height: 'calc(100% - 160.1px)'
         }
       },
       editorOptions () {

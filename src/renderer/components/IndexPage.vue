@@ -2,17 +2,14 @@
     <ph-window>
         <header class="toolbar toolbar-header">
             <h1 class="title">Photon</h1>
-
-
         </header>
-
         <ph-window-content>
             <ph-pane-group>
                 <ph-pane id="sidebar" size="sm" style="position: relative" sidebar=true>
                     <div style="overflow-y: auto;height: calc(100% - 20.8px);">
                         <ph-nav-group>
                             <h5 class="nav-group-title">Favorites</h5>
-                            <Favorites 
+                            <Favorites
                                 :model='model'
                                 :key="model.name"
                                 :selected='selectedFavorite'
@@ -22,7 +19,7 @@
                         </ph-nav-group>
                         <ph-nav-group>
                             <h5 class="nav-group-title">Folders</h5>
-                            <Folders 
+                            <Folders
                                 :model='model'
                                 :key="model.name"
                                 :selected='selectedFolder'
@@ -51,49 +48,7 @@
                     <snippet-list :filter="{type:'F',keyword:'X'}"></snippet-list>
                 </ph-pane>
                 <ph-pane id="codePane" style="overflow:hidden">
-                    <div style="border-bottom: 1px solid #f0f0f0">
-                        <ph-toolbar-actions style="border-bottom: 1px solid #eaeaea;">
-                            <input class="form-control" style="width:calc(100% - 100px);" type="text" placeholder="title">
-
-                            <div style="display: flex;width: 100px;padding: 5px 10px;float: right">
-                                <ph-icon icon="doc-text" style="flex:1;text-align: center"></ph-icon>
-                                <ph-icon icon="share" style="flex:1;text-align: center"></ph-icon>
-                                <ph-icon icon="plus-circled" style="flex:1;text-align: center"></ph-icon>
-                            </div>
-
-                        </ph-toolbar-actions>
-
-                        <ph-toolbar-actions>
-                            <span style="border:1px solid gainsboro">java</span>
-                            <span style="border:1px solid gainsboro">redis</span>
-                            <span style="border:1px solid gainsboro">设计</span>
-                        </ph-toolbar-actions>
-                    </div>
-                    <ph-tab-group>
-                        <ph-tab-item>javascript</ph-tab-item>
-                        <ph-tab-item>html</ph-tab-item>
-                        <ph-tab-item>css</ph-tab-item>
-                        <ph-tab-item fixed=true icon="plus"></ph-tab-item>
-                    </ph-tab-group>
-
-                    <textarea class="form-control"
-                              style="width: 100%;border-bottom: 1px solid gainsboro;resize:none;"
-                              placeholder="notes"
-                              rows="1"></textarea>
-                    <MonacoEditor
-                            language="java"
-                            :code="code"
-                            @mounted="onMounted"
-                            @codeChange="onCodeChange"
-                            theme="vs"
-                            id="editor"
-                    >
-                    </MonacoEditor>
-                    <div style="position: absolute;left: 0;bottom: 0;width: 100%;padding: 0 10px;background-color: #f5f5f4;display: flex">
-                        <a style="flex: 1" onclick="alert('1')">Java</a>
-                        <span style="flex: 1;text-align: center" class="icon icon-lock-open"></span>
-                        <span style="flex:1;text-align: right" class="icon">Line 13,Column 15</span>
-                    </div>
+                  <snippet-editor :snippet="snippet"></snippet-editor>
                 </ph-pane>
 
             </ph-pane-group>
@@ -102,39 +57,22 @@
     </ph-window>
 </template>
 <script>
-  import MonacoEditor from './IndexPage/Monaco.vue'
   import Folders from './IndexPage/Folders.vue'
   import Tags from './IndexPage/Tags.vue'
   import Favorites from './IndexPage/Favorites.vue'
   import SnippetList from './IndexPage/SnippetList'
+  import SnippetEditor from './IndexPage/SnippetEditor'
 
 export default {
     components: {
+      SnippetEditor,
       SnippetList,
-      MonacoEditor,
       Folders,
       Tags,
       Favorites
     },
     data () {
       return {
-        code: `public enum ResultStatus{
-            OK(0x0,"成功"),
-            ERROR(0x1,"失败，未知错误"),
-            MISS_PARAM(0x2,"缺少参数"),
-            PARAM_ERROR(0x3,"参数错误"),
-            BUSINESS_FAILURE(0x4,"业务处理失败"),
-            CANCEL_REGISTER_OVERTIME(0x5,"就诊时间已过，无法取消预约挂号");
-            
-            private Integer code;
-            
-            private String message;
-
-            private ResultStatus(Integer code, String message) {
-                this.code = code;
-                this.message = message;
-            }
-        }`,
         options: {
           selectOnLineNumbers: true
         },
@@ -187,7 +125,34 @@ export default {
         favorites: [{
           name: '全部',
           icon: 'icon-home'
-        }]
+        }],
+        snippet: {
+          id: '1234567',
+          title: 'HttpClient Warpper',
+          lang: 'java',
+          createdTime: '2017-07-02',
+          isLocked: false,
+          tags: [{name: 'Java'}, {name: '配置'}],
+          fragments: [{name: 'html'}, {name: 'css'}, {name: 'js'}],
+          notes: '用于http的请求包装的处理',
+          code: `public enum ResultStatus{
+            OK(0x0,"成功"),
+            ERROR(0x1,"失败，未知错误"),
+            MISS_PARAM(0x2,"缺少参数"),
+            PARAM_ERROR(0x3,"参数错误"),
+            BUSINESS_FAILURE(0x4,"业务处理失败"),
+            CANCEL_REGISTER_OVERTIME(0x5,"就诊时间已过，无法取消预约挂号");
+
+            private Integer code;
+
+            private String message;
+
+            private ResultStatus(Integer code, String message) {
+                this.code = code;
+                this.message = message;
+            }
+        }`
+        }
       }
     },
     methods: {
