@@ -3,9 +3,10 @@
     <div class="split-underline head-bar">
       <ph-toolbar-actions>
         <input
-          class="form-control"
+          class="form-control snippet-title"
           type="text"
           placeholder="请输入代码片段标题"
+          :disabled="snippet.isLocked"
           v-model="snippet.title">
 
         <div class="button-group">
@@ -16,24 +17,38 @@
       </ph-toolbar-actions>
 
       <ph-toolbar-actions
-        class="head-tags"
-        v-show="hasTags">
+        class="head-labels"
+        v-show="hasLabels">
         <span
-          :key ="tag.name"
-          v-for="tag in snippet.tags">{{tag.name}}</span>
+          :key ="label.name"
+          v-for="label in snippet.labels">{{label.name}}</span>
+        <input
+          class="form-control"
+          type="text"
+          :disabled="snippet.isLocked"
+          v-model="labelName"
+          @keydown.enter="addLabel()">
       </ph-toolbar-actions>
     </div>
     <ph-tab-group v-show="hasFragments">
       <ph-tab-item
+        :icon="snippet.isLocked"
         :key ="fragment.name"
-        v-for="fragment in snippet.fragments">{{fragment.name}}</ph-tab-item>
-      <ph-tab-item fixed=true  icon="plus"></ph-tab-item>
+        v-for="fragment in snippet.fragments"
+        @cancel="cancelFragment(fragment)">
+        {{fragment.name}}
+      </ph-tab-item>
+      <ph-tab-item
+        fixed="true"
+        icon="plus"
+        @click.native="addFragment()"></ph-tab-item>
     </ph-tab-group>
 
     <textarea
       class="form-control snippet-notes"
       placeholder="请输入代码片段说明"
       rows="1"
+      :disabled="snippet.isLocked"
       v-model="snippet.notes"
       v-show="hasNotes"></textarea>
     <MonacoEditor
@@ -46,13 +61,20 @@
     </MonacoEditor>
     <div class="foot-bar">
       <span>Java</span>
-      <span style="text-align: center" class="icon icon-lock-open"></span>
-      <span style="text-align: right" class="icon">Line 13,Column 15</span>
+      <span
+        style="text-align: center"
+        class="icon"
+        :class="[snippet.isLocked ? 'icon-lock':'icon-lock-open']"
+        @click="lockToggle()"></span>
+      <span
+        style="text-align: right"
+        class="icon">Line 13,Column 15</span>
     </div>
   </div>
 </template>
 <script>
   import MonacoEditor from './Monaco.vue'
+  var _ = require('lodash')
 
   export default{
     name: 'SnippetEditor',
@@ -61,15 +83,30 @@
     },
     props: ['snippet'],
     data () {
-      return {}
+      return {
+        labelName: null,
+        fragmentName: null
+      }
     },
     methods: {
-
+      addLabel () {
+        this.snippet.labels.push({name: this.labelName})
+        this.labelName = null
+      },
+      lockToggle () {
+        this.snippet.isLocked = !this.snippet.isLocked
+      },
+      cancelFragment (fragment) {
+        this.snippet.fragments = _.filter(this.snippet.fragments, i => i !== fragment)
+      },
+      addFragment () {
+        this.snippet.fragments.push({name: 'text'})
+      }
     },
     computed: {
-      hasTags () {
+      hasLabels () {
         const s = this.snippet
-        return s.tags && s.tags.length > 0
+        return s.labels && s.labels.length > 0
       },
       hasFragments () {
         const s = this.snippet
@@ -91,7 +128,7 @@
     padding-bottom: 6px;
     //margin-top: -3px;
 
-    input{
+    input.snippet-title{
       width:calc(100% - 100px);
     }
 
@@ -108,7 +145,7 @@
       }
     }
 
-    .head-tags{
+    .head-labels{
       padding-left: 10px;
       span{
         border:1px solid gainsboro;
@@ -144,7 +181,31 @@
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f4), color-stop(100%, #f5f5f4));
     background-image: -webkit-linear-gradient(top, #f5f5f4 0%, #f5f5f4 100%);
     background-image: linear-gradient(to bottom, #f5f5f4 0%, #f5f5f4 100%);
+
+    input{
+      border: none;
+      background-color: #f5f5f4;
+      text-align: center;
+      width: auto;
+      line-height: 1.6;
+      outline: none;
+    }
+
   }
+
+  /*.tab-item:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: none;
+    background-color: rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    transition: opacity .1s linear;
+    z-index: 1;
+  }
+*/
   .tab-item.active {
     background-color: #d4d2d4;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d4d2d4), color-stop(100%, #cccacc));

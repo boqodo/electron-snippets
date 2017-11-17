@@ -132,7 +132,7 @@ export default {
           lang: 'java',
           createdTime: '2017-07-02',
           isLocked: false,
-          tags: [{name: 'Java'}, {name: '配置'}],
+          labels: [{name: 'Java'}, {name: '配置'}],
           fragments: [{name: 'html'}, {name: 'css'}, {name: 'js'}],
           notes: '用于http的请求包装的处理',
           code: `public enum ResultStatus{
