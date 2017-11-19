@@ -38,8 +38,8 @@
     computed: {
       style () {
         return {
-          width: 'calc(100% - 0.5px)',
-          height: 'calc(100% - 160.1px)'
+          width: this.width,
+          height: this.height
         }
       },
       editorOptions () {

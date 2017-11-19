@@ -73,9 +73,6 @@ export default {
     },
     data () {
       return {
-        options: {
-          selectOnLineNumbers: true
-        },
         selectedFolder: undefined,
         folders: [{
           name: 'Server',
@@ -133,7 +130,7 @@ export default {
           createdTime: '2017-07-02',
           isLocked: false,
           labels: [{name: 'Java'}, {name: '配置'}],
-          fragments: [{name: 'html'}, {name: 'css'}, {name: 'js'}],
+          fragments: [{name: 'html', isSelected: true}, {name: 'css', isSelected: false}, {name: 'js', isSelected: false}],
           notes: '用于http的请求包装的处理',
           code: `public enum ResultStatus{
             OK(0x0,"成功"),
@@ -156,12 +153,6 @@ export default {
       }
     },
     methods: {
-      onMounted (editor) {
-        this.editor = editor
-      },
-      onCodeChange (editor) {
-        console.log(editor.getValue())
-      },
       onSelectedFolder (name) {
         this.selectedFavorite = null
         this.selectedTag = null

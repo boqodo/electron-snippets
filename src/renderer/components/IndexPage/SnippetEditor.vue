@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%;height: 100%">
+  <div class="snippet-editor-panel">
     <div class="split-underline head-bar">
       <ph-toolbar-actions>
         <input
@@ -27,15 +27,20 @@
           type="text"
           :disabled="snippet.isLocked"
           v-model="labelName"
-          @keydown.enter="addLabel()">
+          @keydown.enter="addLabel()"
+          @keydown.delete="cancelLabel()">
       </ph-toolbar-actions>
     </div>
-    <ph-tab-group v-show="hasFragments">
+    <ph-tab-group
+      class="snippet-fragments"
+      v-show="hasFragments">
       <ph-tab-item
         :icon="snippet.isLocked"
         :key ="fragment.name"
         v-for="fragment in snippet.fragments"
-        @cancel="cancelFragment(fragment)">
+        :class="[fragment.isSelected ? 'fragment-item-selected' :'']"
+        @cancel="cancelFragment(fragment)"
+        @click.native="selectedFragment(fragment)">
         {{fragment.name}}
       </ph-tab-item>
       <ph-tab-item
@@ -52,12 +57,13 @@
       v-model="snippet.notes"
       v-show="hasNotes"></textarea>
     <MonacoEditor
+      class="snippet-editor"
       language="java"
       :code="snippet.code"
+      :options="options"
       @mounted="onMounted"
       @codeChange="onCodeChange"
-      theme="vs"
-      id="editor">
+      theme="vs">
     </MonacoEditor>
     <div class="foot-bar">
       <span>Java</span>
@@ -68,7 +74,7 @@
         @click="lockToggle()"></span>
       <span
         style="text-align: right"
-        class="icon">Line 13,Column 15</span>
+        class="icon">行,列</span>
     </div>
   </div>
 </template>
@@ -84,6 +90,9 @@
     props: ['snippet'],
     data () {
       return {
+        options: {
+          selectOnLineNumbers: true
+        },
         labelName: null,
         fragmentName: null
       }
@@ -93,6 +102,11 @@
         this.snippet.labels.push({name: this.labelName})
         this.labelName = null
       },
+      cancelLabel () {
+        if (!this.labelName || this.labelName.length === 0) {
+          this.snippet.labels.pop()
+        }
+      },
       lockToggle () {
         this.snippet.isLocked = !this.snippet.isLocked
       },
@@ -100,7 +114,18 @@
         this.snippet.fragments = _.filter(this.snippet.fragments, i => i !== fragment)
       },
       addFragment () {
-        this.snippet.fragments.push({name: 'text'})
+        this.snippet.fragments.push({name: 'fragment'})
+      },
+      selectedFragment (fragment) {
+        this.snippet.fragments.forEach(function (i) {
+          i.isSelected = i === fragment
+        })
+      },
+      onMounted (editor) {
+        this.editor = editor
+      },
+      onCodeChange (editor) {
+        console.log(editor.getValue())
       }
     },
     computed: {
@@ -120,13 +145,19 @@
   }
 </script>
 <style lang="scss">
+  .snippet-editor-panel{
+    width: 100%;
+    height:100%;
+    display: flex;
+    flex-direction: column;
+  }
+
   .split-underline{
     border-bottom: 1px solid #f0f0f0
   }
   .head-bar {
-
+    flex:none;
     padding-bottom: 6px;
-    //margin-top: -3px;
 
     input.snippet-title{
       width:calc(100% - 100px);
@@ -147,18 +178,41 @@
 
     .head-labels{
       padding-left: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: -5px;
       span{
+        flex:none;
         border:1px solid gainsboro;
         padding: 3px 5px;
         margin-left: 3px;
         background-color: #f5f5f4;
         color:#a4a4a5;
+        margin-top: 5px;
       }
-
+      input{
+        flex:1;
+      }
     }
   }
 
+  .snippet-fragments{
+    flex:none;
+
+    .fragment-item-selected{
+      background-image: linear-gradient(to bottom, #cececd 0%, #cececd 100%);
+    }
+  }
+  .snippet-editor{
+    flex: 1;
+    display: flex;
+
+    .monaco-editor {
+      flex: 1;
+    }
+  }
   .snippet-notes{
+    flex:none;
     width: 100%;
     border-bottom: 1px solid gainsboro;
     resize:none;
@@ -218,8 +272,8 @@
 
 
   .foot-bar{
-    position: absolute;
-    left: 0;bottom: 0;
+    flex:none;
+    height: 20.8px;
     width: 100%;
     padding: 0 10px;
     background-color: #f5f5f4;
