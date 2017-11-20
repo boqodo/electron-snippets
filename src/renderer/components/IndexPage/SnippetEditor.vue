@@ -49,13 +49,15 @@
         @click.native="addFragment()"></ph-tab-item>
     </ph-tab-group>
 
-    <textarea
-      class="form-control snippet-notes"
-      placeholder="请输入代码片段说明"
-      rows="1"
-      :disabled="snippet.isLocked"
-      v-model="snippet.notes"
-      v-show="hasNotes"></textarea>
+    <div class="snippet-notes">
+      <pre><span>{{snippet.notes}}</span><br /><br /></pre>
+      <textarea
+        class="form-control"
+        placeholder="请输入代码片段说明"
+        :disabled="snippet.isLocked"
+        v-model="snippet.notes"
+        v-show="hasNotes"></textarea>
+    </div>
     <MonacoEditor
       class="snippet-editor"
       language="java"
@@ -211,16 +213,52 @@
       flex: 1;
     }
   }
+
+  // textarea 自适应高度  https://github.com/alexdunphy/flexText
+  // https://segmentfault.com/q/1010000000095238
   .snippet-notes{
     flex:none;
     width: 100%;
     border-bottom: 1px solid gainsboro;
     resize:none;
+    position: relative;
+    max-height: 100px;
+    overflow-y: auto;
 
-    &:focus{
-      border-color:gainsboro;
-      box-shadow: none;
+    textarea,pre {
+      white-space: pre-wrap;
+      width: 100%;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      outline: 0;
+      margin: 0;
+      border: none;
+      padding: 0;
+      line-height: 1.5;
     }
+
+    textarea {
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      resize: none;
+
+
+      &:focus{
+        border-color:gainsboro;
+        box-shadow: none;
+      }
+    }
+
+    pre {
+      display: block;
+      visibility: hidden;
+    }
+
   }
 
 
