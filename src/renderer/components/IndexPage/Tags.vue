@@ -30,7 +30,7 @@
       }
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .selected-tag{
     background-color: rgba(168, 168, 168, 0.5);
 }

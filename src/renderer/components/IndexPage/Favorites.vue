@@ -1,5 +1,5 @@
 <template>
-    <ph-nav-group-item 
+    <ph-nav-group-item
         :class="{'selected-favorite':isCurSelected}"
         @click.native="toggle()">
         <span class="icon"
@@ -32,7 +32,7 @@
       }
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .selected-favorite{
     background-color: rgba(168, 168, 168, 0.5);
 }

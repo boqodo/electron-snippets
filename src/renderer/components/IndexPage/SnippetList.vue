@@ -1,5 +1,31 @@
 <template>
   <div style="width: 100%;height: 100%;">
+    <v-contextmenu ref="contextmenu">
+      <v-contextmenu-item @click="add">新增片段</v-contextmenu-item>
+      <v-contextmenu-item @click="addFromClip">从粘贴板新增片段</v-contextmenu-item>
+      <v-contextmenu-item divider></v-contextmenu-item>
+      <v-contextmenu-item @click="deleteSnippet">删除</v-contextmenu-item>
+      <v-contextmenu-item>
+        <ph-icon icon="cancel-squared" text="true">   重命名</ph-icon>
+      </v-contextmenu-item>
+      <v-contextmenu-submenu title="语言">
+        <v-contextmenu-item>text</v-contextmenu-item>
+        <v-contextmenu-item>java</v-contextmenu-item>
+        <v-contextmenu-item>c++</v-contextmenu-item>
+        <v-contextmenu-item>javascript</v-contextmenu-item>
+        <v-contextmenu-item>python</v-contextmenu-item>
+        <v-contextmenu-item>ruby</v-contextmenu-item>
+      </v-contextmenu-submenu>
+      <v-contextmenu-item divider></v-contextmenu-item>
+      <v-contextmenu-submenu title="排序">
+        <v-contextmenu-item >创建时间</v-contextmenu-item>
+        <v-contextmenu-item >语言</v-contextmenu-item>
+        <v-contextmenu-item >标题</v-contextmenu-item>
+        <v-contextmenu-item divider></v-contextmenu-item>
+        <v-contextmenu-item >升序</v-contextmenu-item>
+        <v-contextmenu-item >降序</v-contextmenu-item>
+      </v-contextmenu-submenu>
+    </v-contextmenu>
     <div class="head-search">
       <input class="form-control"
              type="text"
@@ -10,12 +36,14 @@
         title="新增代码片段"
         @click.native="add()"></ph-icon>
     </div>
-    <ph-list-group class="list-group-area">
+    <ph-list-group class="list-group-area" v-contextmenu:contextmenu>
       <ph-list-group-item
         :key="snippet.id"
         :class="[snippet.isSelected ? 'list-item-selected' : '']"
         v-for="snippet in snippetsList"
-        @click.native="selected(snippet.id)">
+        @click.native="selected(snippet.id)"
+        @contextmenu.native="recordRightClickSnippet(snippet.id,$event)"
+        >
         <div class="media-body"
              :class="[snippet.isLocked ? 'list-item-locked': '']">
           <h5><strong>{{snippet.title}}</strong></h5>
@@ -31,6 +59,7 @@
 <script>
   export default{
     name: 'SnippetList',
+    components: { },
     props: ['filter'],
     created () {
       console.log(this.filter)
@@ -56,7 +85,8 @@
     data () {
       return {
         snippets: [],
-        keyword: null
+        keyword: null,
+        rightClickSnippetId: null
       }
     },
     methods: {
@@ -71,6 +101,9 @@
         }
         this.snippets.push(a)
       },
+      addFromClip () {
+
+      },
       selected (id) {
         let len = this.snippets.length
         for (let i = 0; i < len; i++) {
@@ -81,6 +114,14 @@
             s.isSelected = false
           }
         }
+      },
+      deleteSnippet (vm, event) {
+        if (this.rightClickSnippetId) {
+          this.snippets = this.snippets.filter(i => i.id !== this.rightClickSnippetId)
+        }
+      },
+      recordRightClickSnippet (id, event) {
+        this.rightClickSnippetId = id
       }
     },
     computed: {
@@ -99,7 +140,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   .head-search {
     height: 39.2px;
     width: 100%;

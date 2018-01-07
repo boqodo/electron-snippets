@@ -1,10 +1,10 @@
 <template>
     <div>
-        <ph-nav-group-item 
-            :style="[indentLevel]" 
+        <ph-nav-group-item
+            :style="[indentLevel]"
             :class="{'selected-folder':isCurSelected}"
             @click.native="toggle()">
-            <span class="icon" 
+            <span class="icon"
                 :class="[model.isExpand ? 'expand-folder': 'collapse-folder']"
                 v-if="hasChild"
                 @click="open()" >
@@ -62,7 +62,7 @@
       }
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 $expand-mark: -11px;
 
 .expand-folder {
