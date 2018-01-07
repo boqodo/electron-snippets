@@ -1,13 +1,10 @@
-# electron-snippets
+# electron-snippets（开发中）
 
-> code sinppet demo
-
-## 待补充
-
-
+> 基于vue-electron 开发的代码片段管理器
 
 ## 知识点记录
 
+### vue
 
 ```js
 //事件绑定方法名，则默认传递的参数为event，即当前触发事件
@@ -17,13 +14,17 @@
 //满足上述两者需求
 @click.native=doClick(x.id,$event)
 ```
+### electron
 
-1. 获取剪切板内容
+#### 获取剪切板内容
 
+> [clipboard-apis](https://www.w3.org/TR/clipboard-apis/)
+
+```js
 let clip = require('electron').clipboard
 clip.readText()
+```
 
-[clipboard-apis](https://www.w3.org/TR/clipboard-apis/)
 
 
 ## 组件
@@ -52,6 +53,7 @@ clip.readText()
 ## 问题
 
 1. Cannot read property '$refs' of undefined
+    
     > 应该是refs引用的id对应的组件，需要写在调用$refs的组件之前
 
 ---
