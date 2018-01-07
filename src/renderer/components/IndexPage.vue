@@ -4,10 +4,8 @@
             <h1 class="title">Photon</h1>
         </header>
         <ph-window-content>
-            <ph-pane-group>
-               <split-pane :min-percent='20' :default-percent='30' split="vertical">
-                 <template slot="paneL">
-                    <ph-pane id="sidebar" size="sm" style="position: relative" sidebar=true>
+            <ph-pane-group @mousedown.native="onMouseDown">
+               <ph-pane id="sidebar" size="sm" style="position: relative; max-width:35%" sidebar>
                       <div style="overflow-y: auto;height: calc(100% - 20.8px);">
                           <ph-nav-group>
                               <h5 class="nav-group-title">Favorites</h5>
@@ -39,29 +37,19 @@
                               </Tags>
                           </ph-nav-group>
                       </div>
-
-
                       <div style="position: relative;left: 0;bottom: 0;width: 100%;padding: 0 10px">
                           <span class="icon icon-plus"></span>
                           <span class="icon icon-switch pull-right"></span>
                       </div>
-                  </ph-pane>
-                </template>
-                <template slot="paneR">
-                  <split-pane split="vertical">
-                    <template slot="paneL">
-                      <ph-pane size="sm" style="resize: horizontal;">
-                          <snippet-list :filter="{type:'F',keyword:'X'}"></snippet-list>
-                      </ph-pane>
-                    </template>
-                    <template slot="paneR">
-                      <ph-pane id="codePane" style="overflow:hidden">
-                        <snippet-editor :snippet="snippet"></snippet-editor>
-                      </ph-pane>
-                    </template>
-                  </split-pane>
-                </template>
-               </split-pane>
+                </ph-pane>
+                <div class="resizer"></div>
+                <ph-pane size="sm" style="max-width:35%">
+                    <snippet-list :filter="{type:'F',keyword:'X'}"></snippet-list>
+                </ph-pane>
+                <div class="resizer"></div>
+               <ph-pane id="codePane" style="overflow:hidden">
+                <snippet-editor :snippet="snippet"></snippet-editor>
+              </ph-pane>
             </ph-pane-group>
         </ph-window-content>
     </ph-window>
@@ -73,7 +61,6 @@ import Tags from './IndexPage/Tags.vue'
 import Favorites from './IndexPage/Favorites.vue'
 import SnippetList from './IndexPage/SnippetList'
 import SnippetEditor from './IndexPage/SnippetEditor'
-import splitPane from 'vue-splitpane'
 
 export default {
   components: {
@@ -81,8 +68,7 @@ export default {
     SnippetList,
     Folders,
     Tags,
-    Favorites,
-    splitPane
+    Favorites
   },
   data () {
     return {
@@ -196,11 +182,68 @@ export default {
       this.selectedFavorite = null
       this.selectedFolder = null
       this.selectedTag = name
+    },
+    onMouseDown ({ target: resizer, pageX: initialPageX, pageY: initialPageY }) {
+      if (resizer.className && resizer.className.match('resizer')) {
+        console.log(this)
+        let self = this
+        let { $el: container } = self
+
+        let pane = resizer.previousElementSibling
+        let {
+          offsetWidth: initialPaneWidth
+        } = pane
+
+        let usePercentage = !!(pane.style.width + '').match('%')
+
+        const { addEventListener, removeEventListener } = window
+
+        const resize = (initialSize, offset = 0) => {
+          let containerWidth = container.clientWidth
+          let paneWidth = initialSize + offset
+
+          return (pane.style.width = usePercentage
+            ? paneWidth / containerWidth * 100 + '%'
+            : paneWidth + 'px')
+        }
+
+        // This adds is-resizing class to container
+        self.isResizing = true
+
+        // Resize once to get current computed size
+        let size = resize()
+
+        // Trigger paneResizeStart event
+        self.$emit('paneResizeStart', pane, resizer, size)
+
+        const onMouseMove = function ({ pageX, pageY }) {
+          size = resize(initialPaneWidth, pageX - initialPageX)
+
+          self.$emit('paneResize', pane, resizer, size)
+        }
+
+        const onMouseUp = function () {
+          // Run resize one more time to set computed width/height.
+          size = resize(pane.clientWidth)
+
+          // This removes is-resizing class to container
+          self.isResizing = false
+
+          removeEventListener('mousemove', onMouseMove)
+          removeEventListener('mouseup', onMouseUp)
+
+          self.$emit('paneResizeStop', pane, resizer, size)
+        }
+
+        addEventListener('mousemove', onMouseMove)
+        addEventListener('mouseup', onMouseUp)
+      }
     }
   },
   computed: {}
 }
 </script>
+
 <style>
 @import "/static/css/photon.css";
 
@@ -213,6 +256,22 @@ export default {
 .form-control:focus {
   border-color: inherit;
   box-shadow: none;
+}
+
+.resizer{
+  
+  box-sizing: border-box;
+  background: #000;
+  opacity: 0.2;
+  z-index: 1;
+  background-clip: padding-box;
+   width: 10px;
+  height: 100%;
+  margin-left: -5px;
+  margin-right: -5px;
+  border-left: 5px solid rgba(255, 255, 255, 0);
+  border-right: 5px solid rgba(255, 255, 255, 0);
+  cursor: col-resize;
 }
 
 ::-webkit-scrollbar {

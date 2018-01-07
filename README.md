@@ -16,16 +16,14 @@
 ```
 ### electron
 
-#### 获取剪切板内容
+- 获取剪切板内容
 
-> [clipboard-apis](https://www.w3.org/TR/clipboard-apis/)
+    > [clipboard-apis](https://www.w3.org/TR/clipboard-apis/)
 
-```js
-let clip = require('electron').clipboard
-clip.readText()
-```
-
-
+    ```js
+    let clip = require('electron').clipboard
+    clip.readText()
+    ```
 
 ## 组件
 
@@ -50,6 +48,17 @@ clip.readText()
 
 - [sweet-modal-vue][3]
 
+
+### 分隔拖拉改变大小
+
+-[vue-split-pane][4]
+
+    针对还没有写好布局的可以直接套用，已经写好了的套用上去会有些需要修改的地方，左右分隔面板嵌套使用起来不怎么方便
+
+-[vue-multipane][5] ❤
+
+    基于Flex的方式，使用相对简单；核心代码都在multipane.js的 onMouseDown；原布局已经写好，不像修改成该组件的形式，而且本身也是使用flex，所以直接针对onMouseDown的代码做了部分修改实现；
+
 ## 问题
 
 1. Cannot read property '$refs' of undefined
@@ -65,3 +74,6 @@ This project was generated with [electron-vue](https://github.com/SimulatedGREG/
 
 [2]: https://github.com/euvl/vue-js-modal "vue-js-modal"
 [3]: https://github.com/adeptoas/sweet-modal-vue "sweet-modal-vue"
+
+[4]: https://github.com/PanJiaChen/vue-split-pane "vue-split-pane"
+[5]: https://github.com/yansern/vue-multipane "vue-multipane"
