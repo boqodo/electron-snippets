@@ -8,6 +8,7 @@ import store from './store'
 import install from 'vue-photonkit'
 import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css'
+import VModal from 'vue-js-modal'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -15,6 +16,7 @@ Vue.config.productionTip = false
 
 Vue.use(install)
 Vue.use(contentmenu)
+Vue.use(VModal, { dialog: true })
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,8 +1,5 @@
 <template>
     <ph-window>
-        <header class="toolbar toolbar-header">
-            <h1 class="title">Photon</h1>
-        </header>
         <ph-window-content>
             <ph-pane-group @mousedown.native="onMouseDown">
                <ph-pane id="sidebar" size="sm" style="position: relative; max-width:35%" sidebar>
@@ -52,6 +49,10 @@
               </ph-pane>
             </ph-pane-group>
         </ph-window-content>
+        <modal name="settingWindow">
+          <SettingPage></SettingPage>
+        </modal>
+        <v-dialog/>
     </ph-window>
 </template>
 
@@ -61,6 +62,8 @@ import Tags from './IndexPage/Tags.vue'
 import Favorites from './IndexPage/Favorites.vue'
 import SnippetList from './IndexPage/SnippetList'
 import SnippetEditor from './IndexPage/SnippetEditor'
+import SettingPage from '@/components/SettingPage'
+import { ipcRenderer } from 'electron'
 
 export default {
   components: {
@@ -68,7 +71,39 @@ export default {
     SnippetList,
     Folders,
     Tags,
-    Favorites
+    Favorites,
+    SettingPage
+  },
+  created () {
+    ipcRenderer.on('action', (event, arg) => {
+      switch (arg) {
+        case 'setting': // 新建文件
+          this.$modal.show('settingWindow')
+          /*
+          this.$modal.show('dialog', {
+            title: 'Alert!',
+            text: 'You are too awesome',
+            buttons: [
+              {
+                title: 'Deal with it',
+                handler: () => { alert('Woot!') }
+              },
+              {
+                title: '', // Button title
+                default: true, // Will be triggered by default if 'Enter' pressed.
+                handler: () => {} // Button click handler
+              },
+              {
+                title: 'Close'
+              }
+            ]
+          })
+          */
+          break
+        default:
+          console.log(event)
+      }
+    })
   },
   data () {
     return {
@@ -185,7 +220,6 @@ export default {
     },
     onMouseDown ({ target: resizer, pageX: initialPageX, pageY: initialPageY }) {
       if (resizer.className && resizer.className.match('resizer')) {
-        console.log(this)
         let self = this
         let { $el: container } = self
 

@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, Menu, BrowserWindow, MenuItem } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -30,6 +30,16 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  let appMenu = Menu.getApplicationMenu()
+  let setting = new MenuItem({
+    type: 'normal',
+    label: 'Setting',
+    click: (menuItem, browserWindow, event) => {
+      mainWindow.webContents.send('action', 'setting')
+    }
+  })
+  appMenu.items[0].submenu.append(setting)
 }
 
 app.on('ready', createWindow)

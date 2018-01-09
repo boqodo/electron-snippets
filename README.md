@@ -14,20 +14,81 @@
 //满足上述两者需求
 @click.native=doClick(x.id,$event)
 ```
+
 ### electron
 
-- 获取剪切板内容
+#### 主进程同渲染进程通讯
 
-    > [clipboard-apis](https://www.w3.org/TR/clipboard-apis/)
+```js
+// 主进程发送消息
+mainWindow.webContents.send('action', 'setting')
 
-    ```js
-    let clip = require('electron').clipboard
-    clip.readText()
-    ```
+// 渲染进程接收消息
+import { ipcRenderer } from 'electron'
+
+ipcRenderer.on('action', (event, arg) => {
+  switch (arg) {
+    case 'setting': // 新建文件
+      console.log(event)
+  }
+})
+```
+
+
+#### 顶部菜单(主进程)
+
+```js
+// 原有菜单基础上添加子菜单
+let appMenu = Menu.getApplicationMenu()
+let setting = new MenuItem({
+    type: 'normal',
+    label: 'Setting',
+    click: (menuItem, browserWindow, event) => {
+        // 发送消息到渲染进程
+        mainWindow.webContents.send('action', 'setting')
+    }
+})
+appMenu.items[0].submenu.append(setting)
+
+// 根据template构建所有的菜单，template需要符合约定json格式
+var menu = Menu.buildFromTemplate(template);
+Menu.setApplicationMenu(menu);
+```
+
+#### 右键菜单(渲染进程)
+
+remote 模块负责在渲染进程（网页）和主进程之间进行进程间通讯（IPC）
+
+```js
+const remote = require('electron').remote
+const Menu = remote.Menu
+const MenuItem = remote.MenuItem
+
+var menu = new Menu()
+menu.append(new MenuItem({ label: 'MenuItem1', click: function () { alert('zqz click  item 1') } }))
+menu.append(new MenuItem({ type: 'separator' }))
+menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }))
+
+window.addEventListener('contextmenu', function (e) {
+  e.preventDefault()
+  menu.popup(remote.getCurrentWindow())
+}, false)
+```
+
+#### 获取剪切板内容
+
+> [clipboard-apis](https://www.w3.org/TR/clipboard-apis/)
+
+```js
+let clip = require('electron').clipboard
+clip.readText()
+```
 
 ## 组件
 
 ### 右键菜单
+
+- 主进程构建Menu，进行popup展示
 
 - [vue-context-menu][0]
 
@@ -36,10 +97,9 @@
 
 - [v-contextmenu][1] ❤
 
-    - 支持菜单分组
-    - 支持分割线
-    - 支持多级子菜单
-    
+  - 支持菜单分组
+  - 支持分割线
+  - 支持多级子菜单
     右键菜单监听在指定的区域内，无法指定到具体的某个组件，所以需要解决右键点击时是具体在哪个组件上触发，目前解决方式是在组件上添加 contextmenu.native事件监听记录数据，再触发菜单内的事件时取记录的数据进行逻辑处理
 
 ### 弹出框
@@ -51,20 +111,24 @@
 
 ### 分隔拖拉改变大小
 
--[vue-split-pane][4]
+- [vue-split-pane][4]
 
     针对还没有写好布局的可以直接套用，已经写好了的套用上去会有些需要修改的地方，左右分隔面板嵌套使用起来不怎么方便
 
--[vue-multipane][5] ❤
+- [vue-multipane][5] ❤
 
     基于Flex的方式，使用相对简单；核心代码都在multipane.js的 onMouseDown；原布局已经写好，不像修改成该组件的形式，而且本身也是使用flex，所以直接针对onMouseDown的代码做了部分修改实现；
 
 ## 问题
 
 1. Cannot read property '$refs' of undefined
-    
     > 应该是refs引用的id对应的组件，需要写在调用$refs的组件之前
 
+
+
+## 参考
+
+1. [Electron 中文文档](https://www.w3cschool.cn/electronmanual/)
 ---
 
 This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[de85f81](https://github.com/SimulatedGREG/electron-vue/tree/de85f81890c01500113738bfe57bef136f9fbf52) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).

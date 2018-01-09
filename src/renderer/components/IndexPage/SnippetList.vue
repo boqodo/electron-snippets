@@ -4,11 +4,11 @@
       <v-contextmenu-item @click="add">新增片段</v-contextmenu-item>
       <v-contextmenu-item @click="addFromClip">从粘贴板新增片段</v-contextmenu-item>
       <v-contextmenu-item divider></v-contextmenu-item>
-      <v-contextmenu-item @click="deleteSnippet">删除</v-contextmenu-item>
+      <v-contextmenu-item @click="deleteSnippet" v-show="rightClickSnippetId">删除</v-contextmenu-item>
       <v-contextmenu-item>
-        <ph-icon icon="cancel-squared" text="true">   重命名</ph-icon>
+        <ph-icon icon="cancel-squared" text="true" v-show="rightClickSnippetId">   重命名</ph-icon>
       </v-contextmenu-item>
-      <v-contextmenu-submenu title="语言">
+      <v-contextmenu-submenu title="语言" v-show="rightClickSnippetId">
         <v-contextmenu-item>text</v-contextmenu-item>
         <v-contextmenu-item>java</v-contextmenu-item>
         <v-contextmenu-item>c++</v-contextmenu-item>
@@ -16,7 +16,7 @@
         <v-contextmenu-item>python</v-contextmenu-item>
         <v-contextmenu-item>ruby</v-contextmenu-item>
       </v-contextmenu-submenu>
-      <v-contextmenu-item divider></v-contextmenu-item>
+      <v-contextmenu-item divider v-show="rightClickSnippetId"></v-contextmenu-item>
       <v-contextmenu-submenu title="排序">
         <v-contextmenu-item >创建时间</v-contextmenu-item>
         <v-contextmenu-item >语言</v-contextmenu-item>
@@ -36,7 +36,9 @@
         title="新增代码片段"
         @click.native="add()"></ph-icon>
     </div>
-    <ph-list-group class="list-group-area" v-contextmenu:contextmenu>
+    <ph-list-group class="list-group-area" 
+      @contextmenu.native.self="rightClickSnippetId = null"
+      v-contextmenu:contextmenu>
       <ph-list-group-item
         :key="snippet.id"
         :class="[snippet.isSelected ? 'list-item-selected' : '']"
