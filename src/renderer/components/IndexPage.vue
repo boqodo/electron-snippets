@@ -1,59 +1,45 @@
 <template>
-    <ph-window>
-        <ph-window-content>
-            <ph-pane-group @mousedown.native="onMouseDown">
-               <ph-pane id="sidebar" size="sm" style="position: relative; max-width:35%" sidebar>
-                      <div style="overflow-y: auto;height: calc(100% - 20.8px);">
-                          <ph-nav-group>
-                              <h5 class="nav-group-title">Favorites</h5>
-                              <Favorites
-                                  :model='model'
-                                  :key="model.name"
-                                  :selected='selectedFavorite'
-                                  @selectedFavoriteEvent = 'onSelectedFavorite'
-                                  v-for='model in favorites'>
-                              </Favorites>
-                          </ph-nav-group>
-                          <ph-nav-group>
-                              <h5 class="nav-group-title">Folders</h5>
-                              <Folders
-                                  :model='model'
-                                  :key="model.name"
-                                  :selected='selectedFolder'
-                                  @selectedFolderEvent = 'onSelectedFolder'
-                                  v-for='model in folders'>
-                              </Folders>
-                          </ph-nav-group>
-                          <ph-nav-group>
-                              <h5 class="nav-group-title">Tags</h5>
-                              <Tags :model='model'
-                                    :key="model.name"
-                                    :selected='selectedTag'
-                                    @selectedTagEvent='onSelectedTag'
-                                    v-for='model in tags'>
-                              </Tags>
-                          </ph-nav-group>
-                      </div>
-                      <div style="position: relative;left: 0;bottom: 0;width: 100%;padding: 0 10px">
-                          <span class="icon icon-plus"></span>
-                          <span class="icon icon-switch pull-right"></span>
-                      </div>
-                </ph-pane>
-                <div class="resizer"></div>
-                <ph-pane size="sm" style="max-width:35%">
-                    <snippet-list :filter="{type:'F',keyword:'X'}"></snippet-list>
-                </ph-pane>
-                <div class="resizer"></div>
-               <ph-pane id="codePane" style="overflow:hidden">
-                <snippet-editor :snippet="snippet"></snippet-editor>
-              </ph-pane>
-            </ph-pane-group>
-        </ph-window-content>
-        <modal name="settingWindow">
-          <SettingPage></SettingPage>
-        </modal>
-        <v-dialog/>
-    </ph-window>
+  <ph-window>
+    <ph-window-content>
+      <ph-pane-group @mousedown.native="onMouseDown">
+        <ph-pane id="sidebar" size="sm" style="position: relative; max-width:35%" sidebar>
+          <div style="overflow-y: auto;height: calc(100% - 20.8px);">
+            <ph-nav-group>
+              <h5 class="nav-group-title">Favorites</h5>
+              <Favorites :model='model' :key="model.name" :selected='selectedFavorite' @selectedFavoriteEvent='onSelectedFavorite' v-for='model in favorites'>
+              </Favorites>
+            </ph-nav-group>
+            <ph-nav-group>
+              <h5 class="nav-group-title">Folders</h5>
+              <Folders :model='model' :key="model.name" :selected='selectedFolder' @selectedFolderEvent='onSelectedFolder' v-for='model in folders'>
+              </Folders>
+            </ph-nav-group>
+            <ph-nav-group>
+              <h5 class="nav-group-title">Tags</h5>
+              <Tags :model='model' :key="model.name" :selected='selectedTag' @selectedTagEvent='onSelectedTag' v-for='model in tags'>
+              </Tags>
+            </ph-nav-group>
+          </div>
+          <div style="position: relative;left: 0;bottom: 0;width: 100%;padding: 0 10px">
+            <span class="icon icon-plus"></span>
+            <span class="icon icon-switch pull-right"></span>
+          </div>
+        </ph-pane>
+        <div class="resizer"></div>
+        <ph-pane size="sm" style="max-width:35%">
+          <snippet-list :filter="{type:'F',keyword:'X'}"></snippet-list>
+        </ph-pane>
+        <div class="resizer"></div>
+        <ph-pane id="codePane" style="overflow:hidden">
+          <snippet-editor :snippet="snippet"></snippet-editor>
+        </ph-pane>
+      </ph-pane-group>
+    </ph-window-content>
+    <modal name="settingWindow">
+      <SettingPage></SettingPage>
+    </modal>
+    <v-dialog/>
+  </ph-window>
 </template>
 
 <script>
@@ -224,9 +210,7 @@ export default {
         let { $el: container } = self
 
         let pane = resizer.previousElementSibling
-        let {
-          offsetWidth: initialPaneWidth
-        } = pane
+        let { offsetWidth: initialPaneWidth } = pane
 
         let usePercentage = !!(pane.style.width + '').match('%')
 
@@ -292,14 +276,13 @@ export default {
   box-shadow: none;
 }
 
-.resizer{
-  
+.resizer {
   box-sizing: border-box;
   background: #000;
   opacity: 0.2;
   z-index: 1;
   background-clip: padding-box;
-   width: 10px;
+  width: 10px;
   height: 100%;
   margin-left: -5px;
   margin-right: -5px;
