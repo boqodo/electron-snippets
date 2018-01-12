@@ -35,8 +35,10 @@
         </ph-pane>
       </ph-pane-group>
     </ph-window-content>
-    <modal name="settingWindow">
-      <SettingPage></SettingPage>
+    <modal name="settingWindow"  
+           :width="'60%'"
+           :height="'80%'">
+      <SettingPage @close="onCloseSettingPage"></SettingPage>
     </modal>
     <v-dialog/>
   </ph-window>
@@ -203,6 +205,9 @@ export default {
       this.selectedFavorite = null
       this.selectedFolder = null
       this.selectedTag = name
+    },
+    onCloseSettingPage () {
+      this.$modal.hide('settingWindow')
     },
     onMouseDown ({ target: resizer, pageX: initialPageX, pageY: initialPageY }) {
       if (resizer.className && resizer.className.match('resizer')) {
