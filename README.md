@@ -75,6 +75,17 @@ window.addEventListener('contextmenu', function (e) {
 }, false)
 ```
 
+#### 打开文件选择框
+
+```js
+const remote = require('electron').remote
+const dialog = remote.dialog
+let paths = dialog.showOpenDialog({
+    properties: ['openDirectory'],
+    title: '请选择文件存放目录',
+    defaultPath: dirpath
+})
+```
 #### 获取剪切板内容
 
 > [clipboard-apis](https://www.w3.org/TR/clipboard-apis/)
@@ -83,6 +94,11 @@ window.addEventListener('contextmenu', function (e) {
 let clip = require('electron').clipboard
 clip.readText()
 ```
+
+#### 读取和保存配置文件
+
+> [nconf](https://github.com/indexzero/nconf) 封装了json的读取保存到磁盘
+
 
 ## 组件
 

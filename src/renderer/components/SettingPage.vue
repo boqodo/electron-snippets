@@ -21,22 +21,25 @@
                 <div class="preference-panel">
                     <div class="preference-item">
                         <div class="preference-item-key">
-                            <span>文件存放目录</span>
+                            <span>文件存放目录：</span>
                         </div>
                         <div class="preference-item-setting">
-                            <span class="icon icon-shuffle" @click="selectSaveDir('storedir')"></span>
+                            <span class="icon icon-shuffle" 
+                                @click="selectSaveDir('storedir')"></span>
                             <input type="text" class="form-control" placeholder="请选择文件存放目录" readonly
-                                :value="setting.sys.storedir"/>
+                                :value="setting.sys.storedir"
+                                @click="selectSaveDir('storedir')"/>
                         </div>
                     </div>
                     <div class="preference-item">
                         <div class="preference-item-key">
-                            <span>Git安装目录</span>
+                            <span>&nbsp;&nbsp;Git安装目录：</span>
                         </div>
                         <div class="preference-item-setting">
                             <span class="icon icon-flow-cascade" @click="selectSaveDir('gitdir')"></span>
                             <input type="text" class="form-control" placeholder="请选择Git安装目录" readonly
-                                :value="setting.sys.gitdir"/>
+                                :value="setting.sys.gitdir"
+                                @click="selectSaveDir('gitdir')"/>
                         </div>
                     </div>
                 </div>
@@ -56,7 +59,8 @@
     </div>
 </template>
 <script>
-const remote = require('electron').remote
+import { remote } from 'electron'
+import config from '../../config.js'
 const dialog = remote.dialog
 const app = remote.app
 
@@ -67,11 +71,11 @@ export default{
     return {
       tabs: [{
         icon: 'icon-cog',
-        activated: false,
+        activated: true,
         title: '系统'
       }, {
         icon: 'icon-eye',
-        activated: true,
+        activated: false,
         title: '外观'
       }, {
         icon: 'icon-tools',
@@ -89,7 +93,8 @@ export default{
   },
   methods: {
     close (e) {
-      this.$emit('close')
+      config.save('setting', this.setting)
+      this.$emit('close', this.setting)
     },
     selectTab (tab) {
       this.tabs.forEach((t, i) => {
@@ -103,6 +108,11 @@ export default{
     },
     selectSaveDir (key) {
       let apppath = app.getAppPath()
+
+      console.log(app.getPath('userData'))
+      console.log(app.getPath('appData'))
+      console.log(app.getPath('home'))
+      console.log(app.getPath('desktop'))
       let index = apppath.indexOf('node_modules')
       let dirpath = apppath.substring(0, index)
       let paths = dialog.showOpenDialog({
@@ -148,6 +158,7 @@ export default{
             flex:1;
             text-align: center;
             margin: 1px;
+            line-height: 1.2;
             &:active{
                 background:  rgba(175, 175, 175, .2)
             }
@@ -166,6 +177,46 @@ export default{
         flex:1;
         width: 100%
     }
+
+    .preference-panel{
+        margin: 1em 0 0 2em;
+        display: flex;
+        box-sizing: border-box;
+        justify-content:center;
+        align-items: center;
+        flex-direction: column;
+
+        .preference-item{
+            flex:1;
+            width: 100%;
+
+            .preference-item-key{
+                font-weight: bolder;
+            }
+
+            .preference-item-setting{
+                margin: 0 0.5em 0 1em;
+                display: flex;
+                box-sizing: border-box;
+                justify-content:center;
+                align-items: center;
+                flex-direction: row;
+                text-align: center;
+                span{
+                    padding: 5px 10px;
+                    width: 10%;
+                    &:active{
+                        background: gainsboro
+                    }
+                }
+
+                input{
+                    flex:1
+                }
+            }
+        }
+    }
+
     .footer{
         height: 10%;
         width: 100%;
