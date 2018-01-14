@@ -67,6 +67,14 @@ const app = remote.app
 export default{
   name: 'Setting',
   props: [],
+  created () {
+    let setting = config.readSetting()
+    this.setting = setting
+    // TODO:git 检测环境变量中已存在则可不填; 取消选中的路径功能
+    config.hasGit().then((b) => {
+      this.hasGit = b
+    })
+  },
   data () {
     return {
       tabs: [{
@@ -93,7 +101,7 @@ export default{
   },
   methods: {
     close (e) {
-      config.save('setting', this.setting)
+      config.saveSetting(this.setting)
       this.$emit('close', this.setting)
     },
     selectTab (tab) {
@@ -107,14 +115,12 @@ export default{
       })
     },
     selectSaveDir (key) {
-      let apppath = app.getAppPath()
-
-      console.log(app.getPath('userData'))
-      console.log(app.getPath('appData'))
-      console.log(app.getPath('home'))
-      console.log(app.getPath('desktop'))
-      let index = apppath.indexOf('node_modules')
-      let dirpath = apppath.substring(0, index)
+      let dirpath = this.setting.sys[key]
+      if (!dirpath) {
+        let apppath = app.getAppPath()
+        let index = apppath.indexOf('node_modules')
+        dirpath = apppath.substring(0, index)
+      }
       let paths = dialog.showOpenDialog({
         properties: ['openDirectory'],
         title: '请选择文件存放目录',

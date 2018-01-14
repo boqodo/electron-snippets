@@ -92,7 +92,10 @@ let paths = dialog.showOpenDialog({
 
 ```js
 let clip = require('electron').clipboard
+// 读取
 clip.readText()
+// 写入
+clip.writeText(text)
 ```
 
 #### 读取和保存配置文件

@@ -10,7 +10,7 @@
           v-model="snippet.title">
 
         <div class="button-group">
-          <ph-icon icon="doc-text"></ph-icon>
+          <ph-icon icon="doc-text" @click.native="copy2Clip"></ph-icon>
           <ph-icon icon="share"></ph-icon>
           <ph-icon icon="plus-circled"></ph-icon>
         </div>
@@ -82,7 +82,8 @@
 </template>
 <script>
   import MonacoEditor from './Monaco.vue'
-  var _ = require('lodash')
+  import helper from '../../../helper'
+  import _ from 'lodash'
 
   export default{
     name: 'SnippetEditor',
@@ -128,6 +129,9 @@
       },
       onCodeChange (editor) {
         console.log(editor.getValue())
+      },
+      copy2Clip () {
+        helper.writeTextToClip(this.snippet.code)
       }
     },
     computed: {

@@ -59,88 +59,95 @@
   </div>
 </template>
 <script>
-  export default{
-    name: 'SnippetList',
-    components: { },
-    props: ['filter'],
-    created () {
-      console.log(this.filter)
-      let s = {
-        id: '1234567',
-        title: 'HttpClient Warpper',
-        lang: 'java',
-        createdTime: '2017-07-02',
+import helper from '../../../helper'
+import dateformat from 'dateformat'
+export default{
+  name: 'SnippetList',
+  components: { },
+  props: ['filter'],
+  created () {
+    let s = {
+      id: '1234567',
+      title: 'HttpClient Warpper',
+      lang: 'java',
+      createdTime: '2017-07-02',
+      isLocked: false,
+      isSelected: false
+    }
+    this.snippets.push(s)
+    let x = {
+      id: '789456',
+      title: 'Spring config',
+      lang: 'java',
+      createdTime: '2017-07-03',
+      isLocked: true,
+      isSelected: false
+    }
+    this.snippets.push(x)
+  },
+  data () {
+    return {
+      snippets: [],
+      keyword: null,
+      rightClickSnippetId: null
+    }
+  },
+  methods: {
+    factory () {
+      let a = {
+        id: new Date().getTime(),
+        title: 'undefind' + parseInt(Math.random() * 100),
+        lang: 'text',
+        createdTime: dateformat(new Date(), 'yyyy-MM-dd'),
         isLocked: false,
         isSelected: false
       }
-      this.snippets.push(s)
-      let x = {
-        id: '789456',
-        title: 'Spring config',
-        lang: 'java',
-        createdTime: '2017-07-03',
-        isLocked: true,
-        isSelected: false
-      }
-      this.snippets.push(x)
+      return a
     },
-    data () {
-      return {
-        snippets: [],
-        keyword: null,
-        rightClickSnippetId: null
-      }
+    add () {
+      this.snippets.push(this.factory())
     },
-    methods: {
-      add () {
-        let a = {
-          id: new Date().getTime(),
-          title: 'undefind' + parseInt(Math.random() * 100),
-          lang: 'text',
-          createdTime: '2017-11-11',
-          isLocked: false,
-          isSelected: false
-        }
-        this.snippets.push(a)
-      },
-      addFromClip () {
-
-      },
-      selected (id) {
-        let len = this.snippets.length
-        for (let i = 0; i < len; i++) {
-          let s = this.snippets[i]
-          if (s.id === id) {
-            s.isSelected = true
-          } else {
-            s.isSelected = false
-          }
-        }
-      },
-      deleteSnippet (vm, event) {
-        if (this.rightClickSnippetId) {
-          this.snippets = this.snippets.filter(i => i.id !== this.rightClickSnippetId)
-        }
-      },
-      recordRightClickSnippet (id, event) {
-        this.rightClickSnippetId = id
-      }
+    addFromClip () {
+      let a = this.factory()
+      let text = helper.readTextFromClip()
+      a.code = text
+      this.snippets.push(a)
     },
-    computed: {
-      snippetsList () {
-        let filter = this.filter
-        if (filter) {
-          // 加载指定分类
-        }
-        let k = this.keyword
-        if (k) {
-          return this.snippets.filter(i => i.title.toLocaleLowerCase().indexOf(k.toLocaleLowerCase()) > -1)
+    selected (id) {
+      let len = this.snippets.length
+      for (let i = 0; i < len; i++) {
+        let s = this.snippets[i]
+        if (s.id === id) {
+          s.isSelected = true
         } else {
-          return this.snippets
+          s.isSelected = false
         }
+      }
+    },
+    deleteSnippet (vm, event) {
+      if (this.rightClickSnippetId) {
+        this.snippets = this.snippets.filter(i => i.id !== this.rightClickSnippetId)
+      }
+    },
+    recordRightClickSnippet (id, event) {
+      this.rightClickSnippetId = id
+    }
+  },
+  computed: {
+    snippetsList () {
+      let filter = this.filter
+      if (filter) {
+        // 加载指定分类
+      }
+      let k = this.keyword
+      if (k) {
+        return this.snippets.filter(i => i.title.toLocaleLowerCase().indexOf(k.toLocaleLowerCase()) > -1)
+      } else {
+        return this.snippets
       }
     }
   }
+}
 </script>
 <style lang="scss" scoped>
   .head-search {
