@@ -61,6 +61,7 @@
 <script>
 import { remote } from 'electron'
 import config from '../../config.js'
+import helper from '../../helper.js'
 const dialog = remote.dialog
 const app = remote.app
 
@@ -71,7 +72,7 @@ export default{
     let setting = config.readSetting()
     this.setting = setting
     // TODO:git 检测环境变量中已存在则可不填; 取消选中的路径功能
-    config.hasGit().then((b) => {
+    helper.hasGit().then((b) => {
       this.hasGit = b
     })
   },

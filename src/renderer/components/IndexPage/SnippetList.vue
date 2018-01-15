@@ -6,7 +6,7 @@
       <v-contextmenu-item divider></v-contextmenu-item>
       <v-contextmenu-item @click="deleteSnippet" v-show="rightClickSnippetId">删除</v-contextmenu-item>
       <v-contextmenu-item>
-        <ph-icon icon="cancel-squared" text="true" v-show="rightClickSnippetId">   重命名</ph-icon>
+        <ph-icon icon="cancel-squared" text v-show="rightClickSnippetId">重命名</ph-icon>
       </v-contextmenu-item>
       <v-contextmenu-submenu title="语言" v-show="rightClickSnippetId">
         <v-contextmenu-item>text</v-contextmenu-item>
@@ -22,7 +22,9 @@
         <v-contextmenu-item >语言</v-contextmenu-item>
         <v-contextmenu-item >标题</v-contextmenu-item>
         <v-contextmenu-item divider></v-contextmenu-item>
-        <v-contextmenu-item >升序</v-contextmenu-item>
+        <v-contextmenu-item >
+          <ph-icon icon="check" text>升序</ph-icon>
+        </v-contextmenu-item>
         <v-contextmenu-item >降序</v-contextmenu-item>
       </v-contextmenu-submenu>
     </v-contextmenu>
@@ -59,7 +61,7 @@
   </div>
 </template>
 <script>
-import helper from '../../../helper'
+import helper from '../../../helper.js'
 import dateformat from 'dateformat'
 export default{
   name: 'SnippetList',
@@ -180,6 +182,10 @@ export default{
     .list-group-item:active {
       background-color: #f5f5f4;
     }
+  }
+
+  .v-contextmenu-item .icon::before{
+    padding-right: 0.3em;
   }
 
 

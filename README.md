@@ -138,11 +138,17 @@ clip.writeText(text)
 
     基于Flex的方式，使用相对简单；核心代码都在multipane.js的 onMouseDown；原布局已经写好，不像修改成该组件的形式，而且本身也是使用flex，所以直接针对onMouseDown的代码做了部分修改实现；
 
+
+## 类库
+
+- [dateformat](https://github.com/felixge/node-dateformat)
+
 ## 问题
 
 1. Cannot read property '$refs' of undefined
     > 应该是refs引用的id对应的组件，需要写在调用$refs的组件之前
-
+2. Uncaught TypeError: Cannot assign to read only property 'exports' of obj
+    > config.js原先使用`module.exports` 修改为`export default`即可，查询网上资料说是webpack引起的
 
 
 ## 参考

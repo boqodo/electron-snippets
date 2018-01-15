@@ -35,7 +35,7 @@
       class="snippet-fragments"
       v-show="hasFragments">
       <ph-tab-item
-        :icon="snippet.isLocked"
+        :icon="snippet.isLocked?'true':''"
         :key ="fragment.name"
         v-for="fragment in snippet.fragments"
         :class="[fragment.isSelected ? 'fragment-item-selected' :'']"
@@ -44,7 +44,7 @@
         {{fragment.name}}
       </ph-tab-item>
       <ph-tab-item
-        fixed="true"
+        fixed
         icon="plus"
         @click.native="addFragment()"></ph-tab-item>
     </ph-tab-group>
