@@ -59,6 +59,8 @@ import SnippetEditor from './IndexPage/SnippetEditor'
 import SettingPage from '@/components/SettingPage'
 import { ipcRenderer } from 'electron'
 import folderOpt from '../opts/folderOpt'
+import tagOpt from '../opts/tagOpt'
+import favoriteOpt from '../opts/favoriteOpt'
 
 export default {
   components: {
@@ -83,7 +85,12 @@ export default {
     // 初始化操作
     folderOpt.initLoad(f => {
       this.folders = [f]
-      this.selectedFolder = f
+    })
+    tagOpt.initLoad(tags => {
+      this.tags = tags
+    })
+    favoriteOpt.initLoad(favorites => {
+      this.favorites = favorites
     })
   },
   data () {
@@ -92,27 +99,9 @@ export default {
       folders: [],
       expandLevel: 2,
       selectedTag: undefined,
-      tags: [
-        {
-          name: '重要',
-          color: 'red'
-        },
-        {
-          name: '次要',
-          color: 'green'
-        },
-        {
-          name: '主流',
-          color: 'black'
-        }
-      ],
+      tags: [],
       selectedFavorite: undefined,
-      favorites: [
-        {
-          name: '全部',
-          icon: 'icon-home'
-        }
-      ],
+      favorites: [],
       snippet: {
         id: '1234567',
         title: 'HttpClient Warpper',

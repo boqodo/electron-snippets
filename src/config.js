@@ -3,6 +3,9 @@ import electron from 'electron'
 import config from 'nconf'
 
 const settingKey = 'setting'
+const tagsKey = 'tags'
+const favoritesKey = 'favorites'
+
 const dataPath = (electron.app || electron.remote.app).getPath('userData')
 const fileUrl = path.join(dataPath, 'config.json')
 const nconf = config.file({file: fileUrl})
@@ -31,5 +34,11 @@ export default {
   save: save,
   read: read,
   saveSetting: (setting) => save(settingKey, setting),
-  readSetting: () => read(settingKey)
+  readSetting: () => read(settingKey),
+
+  saveTags: (tags) => save(tagsKey, tags),
+  readTags: () => read(tagsKey),
+
+  saveFavorites: (favorites) => save(favoritesKey, favorites),
+  readFavorites: () => read(favoritesKey)
 }

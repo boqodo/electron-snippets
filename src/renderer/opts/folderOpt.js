@@ -1,6 +1,6 @@
-
 import folder from '../../folder.js'
 import helper from '../../helper.js'
+import config from '../../config.js'
 import constatnts from '../../constants.js'
 
 const endLevel = constatnts.FOLDER_EXPAND_LEVEL
@@ -19,7 +19,9 @@ function settingInitLoad (setting, fun) {
  * @param {(f)=>{}} fun 执行函数
  */
 function initLoad (fun) {
-  folder.initLoad(helper.getDefaultStoreDir(), {endLevel: endLevel}).then(fun)
+  let setting = config.readSetting()
+  let storedir = setting ? setting.sys.storedir : helper.getDefaultStoreDir()
+  folder.initLoad(storedir, {endLevel: endLevel}).then(fun)
 }
 
 export default {
