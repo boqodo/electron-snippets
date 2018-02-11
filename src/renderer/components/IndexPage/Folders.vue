@@ -16,6 +16,7 @@
             :model='sitem'
             :selected='selected'
             :key ='sitem.name'
+            :expandLevel='expandLevel'
             v-show="model.isExpand"
             v-for='sitem in model.items'
             @selectedFolderEvent = 'onSelectedFolder'>
@@ -25,22 +26,31 @@
 <script>
     export default{
       name: 'Folders',
-      props: ['model', 'selected'],
+      props: ['model', 'selected', 'expandLevel'],
       components: {
 
       },
+      created () {
+        let isExpand = false
+        if (this.model.canExpand) {
+          isExpand = this.model.level < this.expandLevel
+        }
+        this.model.isExpand = isExpand
+      },
       data () {
         return {
+    
         }
       },
       methods: {
         toggle () {
-          this.$emit('selectedFolderEvent', this.model.name)
+          this.$emit('selectedFolderEvent', this.model)
         },
         onSelectedFolder (name) {
           this.$emit('selectedFolderEvent', name)
         },
         open () {
+          console.log(this.hasChild)
           if (this.hasChild) {
             this.model.isExpand = !this.model.isExpand
           }
@@ -48,7 +58,7 @@
       },
       computed: {
         hasChild () {
-          return this.model.items && this.model.items.length > 0
+          return this.model.canExpand
         },
         indentLevel () {
           let l = this.model.level
@@ -57,7 +67,7 @@
           }
         },
         isCurSelected () {
-          return this.model.name === this.selected
+          return this.model === this.selected
         }
       }
     }

@@ -63,7 +63,6 @@ import { remote } from 'electron'
 import config from '../../config.js'
 import helper from '../../helper.js'
 const dialog = remote.dialog
-const app = remote.app
 
 export default{
   name: 'Setting',
@@ -117,11 +116,7 @@ export default{
     },
     selectSaveDir (key) {
       let dirpath = this.setting.sys[key]
-      if (!dirpath) {
-        let apppath = app.getAppPath()
-        let index = apppath.indexOf('node_modules')
-        dirpath = apppath.substring(0, index)
-      }
+      dirpath = !dirpath ? helper.getDefaultStoreDir() : dirpath
       let paths = dialog.showOpenDialog({
         properties: ['openDirectory'],
         title: '请选择文件存放目录',
@@ -171,8 +166,7 @@ export default{
             }
 
             &.activated{
-                border-bottom: 2px solid goldenrod;
-                color:goldenrod
+                border-bottom: 2px solid rgb(100, 100, 100);
             }
 
             .tab-icon{

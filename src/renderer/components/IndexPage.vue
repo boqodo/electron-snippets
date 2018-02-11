@@ -11,7 +11,13 @@
             </ph-nav-group>
             <ph-nav-group>
               <h5 class="nav-group-title">Folders</h5>
-              <Folders :model='model' :key="model.name" :selected='selectedFolder' @selectedFolderEvent='onSelectedFolder' v-for='model in folders'>
+              <Folders 
+                :model='model' 
+                :key="model.name" 
+                :selected='selectedFolder'
+                :expandLevel='expandLevel'
+                @selectedFolderEvent='onSelectedFolder' 
+                v-for='model in folders'>
               </Folders>
             </ph-nav-group>
             <ph-nav-group>
@@ -52,6 +58,7 @@ import SnippetList from './IndexPage/SnippetList'
 import SnippetEditor from './IndexPage/SnippetEditor'
 import SettingPage from '@/components/SettingPage'
 import { ipcRenderer } from 'electron'
+import folderOpt from '../opts/folderOpt'
 
 export default {
   components: {
@@ -67,74 +74,23 @@ export default {
       switch (arg) {
         case 'setting': // 新建文件
           this.$modal.show('settingWindow')
-          /*
-          this.$modal.show('dialog', {
-            title: 'Alert!',
-            text: 'You are too awesome',
-            buttons: [
-              {
-                title: 'Deal with it',
-                handler: () => { alert('Woot!') }
-              },
-              {
-                title: '', // Button title
-                default: true, // Will be triggered by default if 'Enter' pressed.
-                handler: () => {} // Button click handler
-              },
-              {
-                title: 'Close'
-              }
-            ]
-          })
-          */
           break
         default:
           console.log(event)
       }
     })
+
+    // 初始化操作
+    folderOpt.initLoad(f => {
+      this.folders = [f]
+      this.selectedFolder = f
+    })
   },
   data () {
     return {
       selectedFolder: undefined,
-      folders: [
-        {
-          name: 'Server',
-          isExpand: true,
-          level: 1,
-          items: [
-            {
-              name: 'ngix',
-              level: 2,
-              isExpand: true,
-              items: [
-                {
-                  name: 'config',
-                  level: 3,
-                  items: null
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: 'Html',
-          isExpand: false,
-          level: 1,
-          items: null
-        },
-        {
-          name: 'Java',
-          isExpand: false,
-          level: 1,
-          items: [
-            {
-              name: 'Spring',
-              level: 2,
-              isExpand: false
-            }
-          ]
-        }
-      ],
+      folders: [],
+      expandLevel: 2,
       selectedTag: undefined,
       tags: [
         {
@@ -207,7 +163,10 @@ export default {
       this.selectedTag = name
     },
     onCloseSettingPage (setting) {
-      console.log(setting)
+      folderOpt.settingInitLoad(setting, f => {
+        this.folders = [f]
+        this.selectedFolder = f
+      })
       this.$modal.hide('settingWindow')
     },
     onMouseDown ({ target: resizer, pageX: initialPageX, pageY: initialPageY }) {

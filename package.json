@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "author": "boqodo",
   "description": "code sinppet demo",
-  "license": null,
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js",
@@ -28,6 +28,7 @@
     "dateformat": "^3.0.2",
     "lodash": "^4.17.4",
     "lodash.debounce": "^4.0.8",
+    "lowdb": "^1.0.0",
     "monaco-editor": "0.10.1",
     "monaco-loader": "^0.8.2",
     "nconf": "^0.10.0",

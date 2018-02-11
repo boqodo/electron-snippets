@@ -100,7 +100,7 @@ export default{
         id: new Date().getTime(),
         title: 'undefind' + parseInt(Math.random() * 100),
         lang: 'text',
-        createdTime: dateformat(new Date(), 'yyyy-MM-dd'),
+        createdTime: dateformat(new Date(), 'yyyy-mm-dd'),
         isLocked: false,
         isSelected: false
       }

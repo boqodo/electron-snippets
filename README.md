@@ -125,6 +125,27 @@ clip.writeText(text)
 
 - [vue-js-modal][2] ❤
 
+```js
+this.$modal.show('dialog', {
+    title: 'Alert!',
+    text: 'You are too awesome',
+    buttons: [
+        {
+        title: 'Deal with it',
+        handler: () => { alert('Woot!') }
+        },
+        {
+        title: '', // Button title
+        default: true, // Will be triggered by default if 'Enter' pressed.
+        handler: () => {} // Button click handler
+        },
+        {
+        title: 'Close'
+        }
+    ]
+})
+```
+
 - [sweet-modal-vue][3]
 
 
@@ -142,6 +163,11 @@ clip.writeText(text)
 ## 类库
 
 - [dateformat](https://github.com/felixge/node-dateformat)
+
+### [lowdb](https://github.com/typicode/lowdb)
+
+基于js的轻量级数据库（效率性能未知），在设置的根目录下创建隐藏文件夹`.db`，存放数据库文件
+
 
 ## 问题
 
